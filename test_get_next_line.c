@@ -2,17 +2,20 @@
 
 int main() {
     int fd = open("test.txt", O_RDONLY); // Abre o arquivo de teste para leitura
+    int fd2 = open("testcuatro.txt", O_RDONLY);
     if (fd == -1) {
         perror("Erro ao abrir o arquivo");
         return EXIT_FAILURE;
     }
 
-    char	*line;
+    char *line;
     while ((line = get_next_line(fd)) != NULL) {
         printf("%s", line); // Exibe a linha lida
         free(line); // Libera a memória da linha
     }
 
-    close(fd); // Fecha o arquivo
+    close(fd); // Fecha do primeiro arquivo como (3)
+    close(fd2); //FEcha do segundo arquivo como (4)
     return EXIT_SUCCESS;
 }
+
