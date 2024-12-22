@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_util.c                               :+:      :+:    :+:   */
+/*   get_next_line_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcongolo <jcongolo@student.42madrid.com>   #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -18,8 +18,12 @@
  Uso: Esta função é usada para localizar o caractere de nova linha '\n'
  em `remainder` na função `ft_extract_line`.
 */
-static char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
+	if (!s)
+	{
+		return (NULL);
+	}
 	while (*s) // Itera através da string s
 	{
 		if (*s == (unsigned char)c) // Verifica se o caractere atual é c

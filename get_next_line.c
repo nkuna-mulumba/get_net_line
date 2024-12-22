@@ -71,39 +71,38 @@ static char	*ft_strjoin(const char *s1, const char *s2)
 	
 	return (new_s); // Retorna a nova string
 }
-// Retorna a nova string
 /*
- Função: ft_read_and_update_remainder
- Propósito: Lê dados do arquivo e atualiza o conteúdo de remainder.
- Uso: Esta função é usada para ler novos dados do arquivo e adicioná-los 
- ao conteúdo existente em remainder.
+Função: ft_read_and_update_remainder
+Propósito: Lê dados do arquivo e atualiza o conteúdo de remainder até encontrar uma nova linha.
+Uso: Esta função é usada para ler novos dados do arquivo e adicioná-los ao conteúdo existente em remainder, até que uma nova linha seja encontrada.
 */
-int	ft_read_and_update_remainder(int fd, char **remainder)
+int ft_read_and_update_remainder(int fd, char **remainder)
 {
-	char	*buffer;
-	char	*temp;
-	ssize_t	bytes_read;
+    char    *buffer;
+    char    *temp;
+    ssize_t bytes_read;
 
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char)); // Aloca memória para o buffer
-	if (!buffer)
-		return (-1); // Retorna -1 se a alocação falhar
-	
-	bytes_read = read(fd, buffer, BUFFER_SIZE); // Lê do arquivo para o buffer
-	if (bytes_read <= 0)
-	{
-		free(buffer); // Libera o buffer se a leitura falhar ou chegar ao fim do arquivo
-		return (bytes_read); // Retorna o número de bytes lidos (ou erro)
-	}
-	buffer[bytes_read] = '\0'; // Adiciona o terminador nulo ao buffer
-	
-	temp = ft_strjoin(*remainder, buffer); // Junta remainder e buffer
-	free(buffer); // Libera o buffer
-	if (!temp)
-		return (-1); // Retorna -1 se a junção falhar
-	free(*remainder); // Libera o antigo remainder
-	*remainder = temp; // Atualiza remainder para a nova string combinada
-	
-	return (bytes_read); // Retorna o número de bytes lidos
+    buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char)); // Aloca memória para o buffer
+    if (!buffer)
+        return (-1); // Retorna -1 se a alocação falhar
+    bytes_read = 1; // Inicializa bytes_read com 1 para entrar no loop
+    while (bytes_read && !ft_strchr(*remainder, '\n')) // Continua lendo até encontrar uma nova linha
+    {
+        bytes_read = read(fd, buffer, BUFFER_SIZE); // Lê do arquivo para o buffer
+        if (bytes_read <= 0)
+        {
+            free(buffer); // Libera o buffer se a leitura falhar ou chegar ao fim do arquivo
+            return (bytes_read); // Retorna o número de bytes lidos (ou erro)
+        }
+        buffer[bytes_read] = '\0'; // Adiciona o terminador nulo ao buffer
+        temp = ft_strjoin(*remainder, buffer); // Junta remainder e buffer
+        if (!temp)
+            return (-1); // Retorna -1 se a junção falhar
+        free(*remainder); // Libera o antigo remainder
+        *remainder = temp; // Atualiza remainder para a nova string combinada
+    }
+    free(buffer); // Libera o buffer após sair do loop
+    return (bytes_read); // Retorna o número de bytes lidos
 }
 /*
  Função: get_next_line
